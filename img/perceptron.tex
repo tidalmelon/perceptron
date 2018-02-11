@@ -1,0 +1,185 @@
+\documentclass{article}
+\usepackage{CJKutf8}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{bm}
+\usepackage{enumerate}
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{listings}
+\begin{document}
+\begin{CJK*}{UTF8}{gbsn}
+
+\boldmath
+\tableofcontents
+\section{感知机模型}
+\subsection{模型定义：}
+\quad \quad
+\includegraphics[scale=0.6]{per_1.png}
+\subsection{模型简化：}
+
+\begin{enumerate}[(i)]
+\item output=0,即$h \leqslant \theta$ 时：\\
+$$
+\begin{aligned}
+& w_{1}x_{1} + w_{2}x_{2} + \cdots + w_{n}x_{n} \leqslant \theta \\
+& w_{1}x_{1} + w_{2}x_{2} + \cdots + w_{n}x_{n} +  (-\theta) * 1 \leqslant 0 \\
+& w_{1}x_{1} + w_{2}x_{2} + \cdots + w_{n}x_{n} + \textcolor{blue}{ w_{0}x_{0} }\leqslant 0 \\
+& h = \sum_{\textcolor{blue}{ i=0} }^{n}w_{i}x_{i} \leqslant 0 \quad output=0
+\end{aligned}
+$$
+
+\item output=1,即$h > \theta$ 时：\\
+$$
+\begin{aligned}
+& w_{1}x_{1} + w_{2}x_{2} + \cdots + w_{n}x_{n} > \theta \\
+& w_{1}x_{1} + w_{2}x_{2} + \cdots + w_{n}x_{n} +  (-\theta) * 1 > 0 \\
+& w_{1}x_{1} + w_{2}x_{2} + \cdots + w_{n}x_{n} + \textcolor{blue}{ w_{0}x_{0} }> 0 \\
+& h = \sum_{\textcolor{blue}{ i=0} }^{n}w_{i}x_{i} > 0 \quad output=1
+\end{aligned}
+$$
+
+\item 简化后的激活函数：
+$$
+output = g\left(h\right) = \left\{
+\begin{aligned}
+1\quad  & if \quad h > 0 \\
+0 \quad & if \quad h \leqslant 0
+\end{aligned}
+\right.
+$$
+
+\item 简化后的特征权值：\\
+ $(-\theta) * 1\Rightarrow w_{0}x_{0} \Rightarrow $增加\textcolor{blue}{偏移特征 $x_{0} = 1$}的\textcolor{blue}{权重$w_{0}=-\theta$}
+$$W = \left(  \textcolor{blue}{ w_{0}},w_{1},w_{2},\cdots,w_{n}\right)$$
+
+\includegraphics[scale=0.6]{per_2.png}
+
+
+\end{enumerate}
+
+
+\subsection{模型输入：}
+\begin{enumerate}[(i)]
+\item m组样本的特征向量矩阵：
+
+$$
+ \left\{
+ \begin{matrix}
+  \textcolor{blue}{x_{10}= 1} &x_{11} & x_{12}  &\cdots & x_{1n}\\
+  \textcolor{blue}{x_{20}= 1} &x_{21} & x_{22}  &\cdots & x_{2n}\\
+  \textcolor{blue}{\cdots} &\cdots   & \cdots & \cdots  & \cdots  \\
+  \textcolor{blue}{x_{m0}= 1} &x_{m1} & x_{m2}  &\cdots & x_{mn}\\
+  \end{matrix}
+  \right\}
+$$
+
+\item m组样本的标注向量：\\
+$$
+ \left\{
+ \begin{matrix}
+   y_{1} \\
+   y_{2} \\
+   \cdots \\
+   y_{m} \\
+  \end{matrix}
+  \right\}
+$$
+\end{enumerate}
+
+\subsection{模型计算：}
+
+\begin{enumerate}[(i)]
+\item 如何调整特征权值：$\left(\textcolor{blue}{ w_{0}},  w_{1},w_{2},\cdots ,w_{n}\right)$
+使得感知器的输出向量与样本标注向量全部相同？
+
+$$\mathrm{
+\left\{
+ \begin{matrix}
+   output_{1} \\
+   output_{2} \\
+   \cdots \\
+   output_{m} 
+  \end{matrix}
+  \right\}
+ =
+ \left\{
+ \begin{matrix}
+   y_{1} \\
+   y_{2} \\
+   \cdots \\
+   y_{m} 
+  \end{matrix}
+  \right\}
+}$$
+\item 根据感知器判断错误的样本修改特征权值W [注：标红部分]。 \\
+\begin{tabular}{|c|c|}% 通过添加 | 来表示是否需要绘制竖线
+\hline  % 在表格最上方绘制横线
+标注值Y&输出值OUTPUT\\
+\hline
+0&0\\
+\hline % 在表格最下方绘制横线
+\textcolor{red}{0}&\textcolor{red}{1}\\
+
+\hline  %在第一行和第二行之间绘制横线
+\textcolor{red}{1}&\textcolor{red}{0}\\
+\hline % 在表格最下方绘制横线
+1&1\\
+\hline % 在表格最下方绘制横线
+\end{tabular}
+
+\item 若标注值$y=0$,$output=1$, 则说明
+$$
+\begin{aligned}
+& h = \sum_{i=0}^{n} w_{i}x_{i} > 0 \\
+& \sum_{i=0}^{n} w_{i}x_{i} - \vartriangle < 0 \\
+& \sum_{i=0}^{n} w_{i}x_{i} - \alpha * \sum_{i=0}^{n}x_{i}x_{i} < 0 \\
+& w_{0}x_{0} + w_{1}x_{1} + \cdots + w_{n}x_{n} - \alpha x_{0}x_{0} - \alpha x_{1}x_{1}-\cdots + \alpha x_{n}x_{n} < 0 \\
+& w_{0}x_{0}- \alpha x_{0}x_{0} + w_{1}x_{1} - \alpha x_{1}x_{1}+ \cdots + w_{n}x_{n} - \alpha x_{n}x_{n} < 0 \\
+& x_{0} \left(w_{0}-\alpha x_{0}\right)+x_{1} \left(w_{1}-\alpha x_{1}\right)+\cdots + x_{n} \left(w_{n}-\alpha x_{n}\right) < 0 \\
+& \sum_{x=0}^{n} x_{i} \left(w_{i}-\alpha x_{i}\right) < 0
+\end{aligned}
+$$
+故，特征权值的迭代方法为：
+\begin{equation}
+w_{i\_new}=w_{i} - \alpha x_{i} 
+\end{equation}
+
+\item 若标注值$y=1$,$output=0$, 同理可得：
+\begin{equation}
+w_{i\_new}=w_{i} + \alpha x_{i} 
+\end{equation}
+
+\item 由（1）和（2）迭代算法为：
+$$w_{i\_new}=w_{i} + \alpha \left(y_{i}-output_{i}\right) x_{i} $$ 
+\end{enumerate}
+
+
+\subsection{接口设计：}
+
+\begin{enumerate}[(i)]
+\item 激活函数接口：
+$$
+h = \sum_{\textcolor{blue}{ i=0} }^{n}w_{i}x_{i}
+$$
+$$
+output = g\left(h\right) = \left\{
+\begin{aligned}
+1\quad  & if \quad h > 0 \\
+0 \quad & if \quad h \leqslant 0
+\end{aligned}
+\right.
+$$
+\includegraphics[scale=0.6]{per_3.png}
+
+
+\item 训练函数接口：
+$$ w_{i\_new}=w_{i} + \alpha \left(y_{i}-output_{i}\right) x_{i} $$
+\includegraphics[scale=0.6]{per_4.png}
+\end{enumerate}
+
+\end{CJK*}
+\end{document}
