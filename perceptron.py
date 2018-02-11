@@ -55,11 +55,11 @@ def PerceptronTrain():
         output = np.sum(X * WEIGHTS, axis=1)
         output = np.array(map(lambda x: 1 if x>0 else 0, output))
         
-        # 计算权重的增加量detal:  w_new = w + delta = w + alpha * (y - output) * x
+        # 计算权重的增加量detal: alpha * (y - output) * x
         delta = ALPHA * (Y - output).reshape(SAMPLE_NUM, 1) * X
         delta = np.sum(delta, axis=0)
 
-        # 更新参数
+        # 更新权重： w_new = w + delta = w + alpha * (y - output) * x
         WEIGHTS += delta
         print WEIGHTS
 
