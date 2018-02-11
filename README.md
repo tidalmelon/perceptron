@@ -1,5 +1,7 @@
 #### 感知机
 
+[intro](https://github.com/tidalmelon/perceptron/blob/master/img/perceptron.pdf)  
+
 ```
 5 5 0.321 100
 0.1 0.2 0.3 0.4 0.5 0.6 
